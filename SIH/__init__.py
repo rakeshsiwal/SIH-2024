@@ -8,19 +8,18 @@ def hello_world():
     return render_template('index.html')
 
 @app.route('/process', methods=['POST'])
-def process():
+def process_data():
     data = request.get_json()
-    selected_date = data['date']
-    selected_time = data['time']
-
-    datetime_input = datetime.datetime.strptime(f"{selected_date} {selected_time}", '%Y-%m-%d %H:%M')
-
-    # Here you can pass the `datetime_input` to your machine learning model
-    # result = your_ml_model.predict(datetime_input)
-    # For the example, let's assume it returns a dummy result:
-    result = "Predicted Output"
+    date = data['date']
+    time = data['time']
     
-    return jsonify({'result': result})
+    # Combine date and time into a single datetime object (if needed)
+    datetime_input = f"{date} {time}"
+
+    # Process the input through your ML model
+    model_output = datetime_input # Assuming you have a predict function
+
+    return jsonify({'result': model_output})
 
 if __name__ == "__main__":
     app.run(debug=True)

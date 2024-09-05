@@ -6,6 +6,7 @@
     <title>Power Load Management Dashboard</title>
     <link rel="stylesheet" href="./static/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -29,7 +30,7 @@
             </div>
         </div>
         <h2>Response:</h2>
-        <div id="result"></div>
+        <p id="output"></p>
         <main>
             <section id="real-time-load">
                 <h2>Pridected Chart</h2>
@@ -58,25 +59,26 @@
         </footer>
     </div>
     <script>
-        $(document).ready(function() {
-            $('#dateTimeForm').on('submit', function(event) {
-                event.preventDefault(); // Prevent form from refreshing the page
+        // Use AJAX to send data without refreshing the page
+        $('#dateTimeForm').on('submit', function(event) {
+            event.preventDefault();  // Prevent form from refreshing page
 
-                var date = $('#date').val();
-                var time = $('#time').val();
+            var date = $('#date').val();
+            var time = $('#time').val();
 
-                $.ajax({
-                    url: '/process',
-                    method: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({ date: date, time: time }),
-                    success: function(response) {
-                        $('#result').html('<p>Date: ' + date + '</p><p>Time: ' + time + '</p><p>Model Output: ' + response.result + '</p>');
-                    },
-                    error: function(error) {
-                        $('#result').html('<p>Error: ' + error.responseText + '</p>');
-                    }
-                });
+            // Send data to Python backend using AJAX
+            $.ajax({
+                url: '/process',  // This will be your Flask or Django route
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ date: date, time: time }),
+                success: function(response) {
+                    // Display the result on the same page
+                    $('#output').text('Model Output: ' + response.result);
+                },
+                error: function(error) {
+                    $('#output').text('Error processing the request');
+                }
             });
         });
     </script>
